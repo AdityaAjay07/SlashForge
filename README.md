@@ -1,16 +1,57 @@
-# React + Vite
+# ClubApp (SlashForge)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A campus event and club management portal built for SlashForge '26. Students can discover events, RSVP, and check in via QR code; organizers can manage events and track attendance in real time.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Browse events by category on a responsive homepage
+- View individual event details
+- RSVP to events (no login required)
+- QR code generated on registration
+- Organizer QR scanner for event check-in
+- Organizer dashboard showing registered vs. attended counts per event
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + Vite
+- Supabase (database + row-level security)
+- React Router
+- `qrcode.react` for QR generation
+- `html5-qrcode` for QR scanning
+- Regular CSS (no framework)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone the repo:
+```bash
+   git clone https://github.com/AdityaAjay07/SlashForge.git
+   cd SlashForge
+```
+
+2. Install dependencies:
+```bash
+   npm install
+```
+
+3. Create a `.env` file in the project root with:
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+4. Run the dev server:
+```bash
+   npm run dev
+```
+
+## Known Limitations
+
+- No authentication yet — the `/organizer` route is not access-restricted. This was a deliberate scope decision for the hackathon timeline.
+- Registration data (`name`, `email`) is currently readable by anyone with the anon key, due to RLS policy requirements for returning newly-created rows. Would be tightened with proper auth.
+
+## Project Structure
+
+src/
+├── components/ # Reusable UI pieces (Navbar, Hero, EventCard, CategoryCard, Footer, RSVPForm)
+├── pages/ # Route-level pages (Home, Events, EventDetail, Scanner, Dashboard, Organizer)
+├── supabaseClient.js
+└── App.jsx # Routing and top-level data fetching
+
