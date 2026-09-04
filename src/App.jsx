@@ -4,6 +4,8 @@ import Hero from './components/Hero'
 import EventCard from './components/EventCard'
 import CategoryCard from './components/CategoryCard'
 import Footer from './components/Footer'
+import { useState, useEffect } from 'react'
+import { supabase } from './supabaseClient'
 
 import {
   Laptop,
@@ -12,30 +14,6 @@ import {
   Palette,
   BookOpen
 } from 'lucide-react'
-
-const events = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
-    title: "Tech Summit 2026",
-    date: "September 15, 2026",
-    location: "College of Engineering Trivandrum"
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678",
-    title: "Music Fest 2026",
-    date: "October 2, 2026",
-    location: "Open Air Auditorium"
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205",
-    title: "Campus Hackathon",
-    date: "October 18, 2026",
-    location: "CET Innovation Centre"
-  }
-]
 
 const categories = [
   { id: 1, icon: Laptop, name: "Technology" },
@@ -46,6 +24,24 @@ const categories = [
 ]
 
 function App() {
+  const [events, setEvents] = useState([])
+
+  useEffect(() => {
+    async function fetchEvents() {
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+
+      if (error) {
+        console.error('Error fetching events:', error)
+      } else {
+        setEvents(data)
+      }
+    }
+
+    fetchEvents()
+  }, [])
+
   return (
     <div>
       <Navbar />
