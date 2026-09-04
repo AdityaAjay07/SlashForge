@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import Events from './pages/Events'
+import EventDetail from './pages/EventDetail'
 
 import {
   Laptop,
@@ -49,6 +50,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home events={events} categories={categories} />} />
         <Route path="/events" element={<Events events={events} />} />
+        <Route path="/events/:id" element={<EventDetail events={events} />} />
       </Routes>
 
       <Footer />
