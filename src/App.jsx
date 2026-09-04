@@ -8,6 +8,8 @@ import { supabase } from './supabaseClient'
 import Events from './pages/Events'
 import EventDetail from './pages/EventDetail'
 import Scanner from './pages/Scanner'
+import Dashboard from './pages/Dashboard'
+import Organizer from './pages/Organizer'
 
 import {
   Laptop,
@@ -53,6 +55,8 @@ function App() {
         <Route path="/events" element={<Events events={events} />} />
         <Route path="/events/:id" element={<EventDetail events={events} />} />
         <Route path="/scan" element={<Scanner />} />
+        <Route path="/dashboard" element={<Dashboard events={events} />} />
+        <Route path="/organizer" element={<Organizer />} />
       </Routes>
 
       <Footer />
