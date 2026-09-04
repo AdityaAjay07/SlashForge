@@ -1,4 +1,5 @@
 import EventCard from '../components/EventCard'
+import { Link } from 'react-router-dom'
 
 function Events({ events }) {
   return (
@@ -7,14 +8,15 @@ function Events({ events }) {
 
       <div className="event-list">
         {events.map((event) => (
-          <EventCard
-            key={event.id}
-            image={event.image}
-            title={event.title}
-            date={event.date}
-            location={event.location}
-          />
-        ))}
+  <Link key={event.id} to={`/events/${event.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <EventCard
+      image={event.image}
+      title={event.title}
+      date={event.date}
+      location={event.location}
+    />
+  </Link>
+))}
       </div>
     </div>
   )
