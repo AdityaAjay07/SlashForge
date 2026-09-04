@@ -1,11 +1,13 @@
+import { Link } from 'react-router-dom'
+
 function Navbar() {
   return (
     <nav>
       <h2>ClubApp</h2>
 
       <div>
-        <a href="#home">Home</a>
-        <a href="#events">Events</a>
+        <Link to="/">Home</Link>
+        <Link to="/events">Events</Link>
         <a href="#clubs">Clubs</a>
         <a href="#signin">Sign In</a>
       </div>
