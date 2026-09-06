@@ -10,7 +10,6 @@ function Navbar() {
         <Link to="/events">Events</Link>
         <a href="/clubs">Clubs</a>
         <Link to="/organizer">Organizer</Link>
-        <a href="#clubs">Clubs</a>
         <Link to="/organizer-login">Organizer</Link>
       </div>
     </nav>
