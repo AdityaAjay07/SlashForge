@@ -13,6 +13,7 @@ import Organizer from './pages/Organizer'
 import CreateEvent from './pages/CreateEvent'
 import ManageEvents from './pages/ManageEvents'
 import EditEvent from './pages/EditEvent'
+import Clubs from './pages/Clubs';
 
 import {
   Laptop,
@@ -59,6 +60,7 @@ function App() {
         <Route path="/events/:id" element={<EventDetail events={events} />} />
         <Route path="/scan" element={<Scanner />} />
         <Route path="/dashboard" element={<Dashboard events={events} />} />
+        <Route path="/clubs" element={<Clubs />} />
         <Route path="/organizer" element={<Organizer />} />
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/manage-events" element={<ManageEvents />} />
