@@ -14,9 +14,13 @@ import Organizer from './pages/Organizer'
 import CreateEvent from './pages/CreateEvent'
 import ManageEvents from './pages/ManageEvents'
 import EditEvent from './pages/EditEvent'
-import Clubs from './pages/Clubs';
+import Clubs from './pages/Clubs'
 import OrganizerLogin from './pages/OrganizerLogin'
 import ProtectedRoute from './components/ProtectedRoute'
+
+// Student Pages Imports
+import StudentLogin from './pages/StudentLogin'
+import Profile from './pages/Profile'
 
 import {
   Laptop,
@@ -55,98 +59,88 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar />
+      {/* Footer sticky wrapper container */}
+      <div className="app-container">
+        <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home events={events} categories={categories} />} />
-        <Route path="/events" element={<Events events={events} />} />
-        <Route path="/events/:id" element={<EventDetail events={events} />} />
-        <Route path="/scan" element={<Scanner />} />
-        <Route path="/dashboard" element={<Dashboard events={events} />} />
-        <Route path="/clubs" element={<Clubs />} />
-        <Route path="/organizer" element={<Organizer />} />
-        <Route path="/create-event" element={<CreateEvent />} />
-        <Route path="/manage-events" element={<ManageEvents />} />
-        <Route path="/edit-event/:id" element={<EditEvent />} />
-        {/* Public routes */}
-        <Route
-          path="/"
-          element={<Home events={events} categories={categories} />}
-        />
+        <div className="content-wrap">
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Home events={events} categories={categories} />} />
+            <Route path="/student-home" element={<Home events={events} categories={categories} />} />
+            <Route path="/events" element={<Events events={events} />} />
+            <Route path="/events/:id" element={<EventDetail events={events} />} />
+            <Route path="/clubs" element={<Clubs />} />
 
-        <Route
-          path="/events"
-          element={<Events events={events} />}
-        />
+            {/* Student Auth & Profile Routes */}
+            <Route path="/student-login" element={<StudentLogin />} />
+            <Route path="/profile" element={<Profile />} />
 
-        <Route
-          path="/events/:id"
-          element={<EventDetail events={events} />}
-        />
+            {/* Organizer login */}
+            <Route
+              path="/organizer-login"
+              element={<OrganizerLogin />}
+            />
 
-        {/* Organizer login */}
-        <Route
-          path="/organizer-login"
-          element={<OrganizerLogin />}
-        />
+            {/* Protected organizer routes */}
+            <Route
+              path="/organizer"
+              element={
+                <ProtectedRoute>
+                  <Organizer />
+                </ProtectedRoute>
+              }
+            />
 
-        {/* Protected organizer routes */}
-        <Route
-          path="/organizer"
-          element={
-            <ProtectedRoute>
-              <Organizer />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/scan"
+              element={
+                <ProtectedRoute>
+                  <Scanner />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route
-          path="/scan"
-          element={
-            <ProtectedRoute>
-              <Scanner />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard events={events} />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard events={events} />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/create-event"
+              element={
+                <ProtectedRoute>
+                  <CreateEvent />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route
-          path="/create-event"
-          element={
-            <ProtectedRoute>
-              <CreateEvent />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/manage-events"
+              element={
+                <ProtectedRoute>
+                  <ManageEvents />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route
-          path="/manage-events"
-          element={
-            <ProtectedRoute>
-              <ManageEvents />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/edit-event/:id"
+              element={
+                <ProtectedRoute>
+                  <EditEvent />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
 
-        <Route
-          path="/edit-event/:id"
-          element={
-            <ProtectedRoute>
-              <EditEvent />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-
-      <Footer />
+        <Footer />
+      </div>
     </BrowserRouter>
   )
 }
