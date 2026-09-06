@@ -1,6 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Organizer() {
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    localStorage.removeItem('isOrganizerLoggedIn')
+    navigate('/')
+  }
+
   return (
     <div style={{ padding: '60px' }}>
       <h1>Organizer Tools</h1>
@@ -10,7 +17,7 @@ function Organizer() {
         <Link to="/scan">
           <button>Open QR Scanner</button>
         </Link>
-        
+
         <Link to="/dashboard">
           <button>View Dashboard</button>
         </Link>
@@ -22,7 +29,10 @@ function Organizer() {
         <Link to="/manage-events">
           <button>Manage Events</button>
         </Link>
-        
+
+        <button onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
   )

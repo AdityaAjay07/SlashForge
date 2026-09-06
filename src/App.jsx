@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
+
 import Events from './pages/Events'
 import EventDetail from './pages/EventDetail'
 import Scanner from './pages/Scanner'
@@ -14,6 +15,8 @@ import CreateEvent from './pages/CreateEvent'
 import ManageEvents from './pages/ManageEvents'
 import EditEvent from './pages/EditEvent'
 import Clubs from './pages/Clubs';
+import OrganizerLogin from './pages/OrganizerLogin'
+import ProtectedRoute from './components/ProtectedRoute'
 
 import {
   Laptop,
@@ -65,6 +68,82 @@ function App() {
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/manage-events" element={<ManageEvents />} />
         <Route path="/edit-event/:id" element={<EditEvent />} />
+        {/* Public routes */}
+        <Route
+          path="/"
+          element={<Home events={events} categories={categories} />}
+        />
+
+        <Route
+          path="/events"
+          element={<Events events={events} />}
+        />
+
+        <Route
+          path="/events/:id"
+          element={<EventDetail events={events} />}
+        />
+
+        {/* Organizer login */}
+        <Route
+          path="/organizer-login"
+          element={<OrganizerLogin />}
+        />
+
+        {/* Protected organizer routes */}
+        <Route
+          path="/organizer"
+          element={
+            <ProtectedRoute>
+              <Organizer />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/scan"
+          element={
+            <ProtectedRoute>
+              <Scanner />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard events={events} />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/create-event"
+          element={
+            <ProtectedRoute>
+              <CreateEvent />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manage-events"
+          element={
+            <ProtectedRoute>
+              <ManageEvents />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/edit-event/:id"
+          element={
+            <ProtectedRoute>
+              <EditEvent />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       <Footer />
