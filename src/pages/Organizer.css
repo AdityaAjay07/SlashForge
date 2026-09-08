@@ -272,7 +272,7 @@ body.modal-open {
   border-color: #fbdad2;
 }
 
-/* Scrollable Container with explicit custom scrollbar */
+/* Scrollable Container */
 .club-list-scroll {
   overflow-y: auto;
   padding-right: 8px;
@@ -298,16 +298,16 @@ body.modal-open {
   background: #e76f51;
 }
 
-/* Individual Club Item Card - Enforced Row Layout */
-.club-card {
+/* Modal Specific Club Item Card (Isolated from main page .club-card) */
+.modal-club-item {
   background: #fbfbfb;
   border: 1px solid #eaeaea;
   border-radius: 14px;
   padding: 16px 20px;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: 16px;
   transition: all 0.2s ease;
   box-sizing: border-box;
@@ -315,26 +315,26 @@ body.modal-open {
   flex-shrink: 0;
 }
 
-.club-card:hover {
+.modal-club-item:hover {
   border-color: #fbdad2;
   background: #fffafa;
   box-shadow: 0 4px 12px rgba(231, 111, 81, 0.08);
 }
 
-.club-info {
+.modal-club-info {
   flex: 1;
   min-width: 0;
   text-align: left;
 }
 
-.club-info h4 {
+.modal-club-info h4 {
   margin: 0 0 4px 0;
   color: #1a1a1a;
   font-size: 1.05rem;
   font-weight: 600;
 }
 
-.club-info p {
+.modal-club-info p {
   margin: 0 0 8px 0;
   color: #666;
   font-size: 0.85rem;

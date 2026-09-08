@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { X, ExternalLink, Users } from 'lucide-react';
 import '../pages/Organizer.css';
 
-// Expanded club data for rich scrolling experience
 const CATEGORY_CLUBS = {
   Technology: [
     { name: 'Coding Club / FOSS', desc: 'Open-source software projects, hackathons, and web dev.', members: '250+ Members' },
@@ -82,8 +81,8 @@ function CategoryCard({ icon: Icon, name }) {
 
             <div className="club-list-scroll">
               {clubsList.map((club, idx) => (
-                <div key={idx} className="club-card">
-                  <div className="club-info">
+                <div key={idx} className="modal-club-item">
+                  <div className="modal-club-info">
                     <h4>{club.name}</h4>
                     <p>{club.desc}</p>
                     <span className="member-badge">
