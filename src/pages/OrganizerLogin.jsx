@@ -1,18 +1,44 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
-import { Lock, User, LogIn, ArrowLeft } from 'lucide-react'
+import { Lock, User, LogIn, ArrowLeft, UserPlus } from 'lucide-react'
 import './Organizer.css' // Reusing our clean organizer stylesheet
 
 function OrganizerLogin() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
+  const [isSignUpMode, setIsSignUpMode] = useState(false) // Toggle state for New User registration
 
   const navigate = useNavigate()
 
-  async function handleLogin(e) {
+  // Handle Form Submission (Routes dynamically between Login and Sign Up)
+  async function handleSubmit(e) {
     e.preventDefault()
+
+    if (isSignUpMode) {
+      // --- NEW USER SIGN UP LOGIC (Local Storage fallback for quick setup) ---
+      setMessage('Creating account...')
+      let users = JSON.parse(localStorage.getItem('organizer_users')) || []
+
+      // Check if username already exists
+      const existingUser = users.find(u => u.username.toLowerCase() === username.trim().toLowerCase())
+      if (existingUser) {
+        setMessage('Username already taken. Please choose a unique one.')
+        return
+      }
+
+      // Save new account
+      users.push({ username: username.trim(), password })
+      localStorage.setItem('organizer_users', JSON.stringify(users))
+
+      setMessage('Account created successfully! You can now sign in.')
+      setIsSignUpMode(false) // Switch back to login mode automatically
+      setPassword('')
+      return
+    }
+
+    // --- EXISTING LOGIN LOGIC (Preserving your exact Supabase RPC call) ---
     setMessage('Checking login...')
 
     const { data, error } = await supabase.rpc(
@@ -33,8 +59,26 @@ function OrganizerLogin() {
       localStorage.setItem('isOrganizerLoggedIn', 'true')
       navigate('/organizer')
     } else {
-      setMessage('Invalid username or password.')
+      // Also check local storage custom registered users just in case they signed up via the new option
+      let localUsers = JSON.parse(localStorage.getItem('organizer_users')) || []
+      const localMatch = localUsers.find(u => u.username === username && u.password === password)
+
+      if (localMatch) {
+        localStorage.setItem('isOrganizerLoggedIn', 'true')
+        navigate('/organizer')
+      } else {
+        setMessage('Invalid username or password.')
+      }
     }
+  }
+
+  // Toggle between Login and Sign Up view smoothly
+  function toggleMode(e) {
+    e.preventDefault()
+    setIsSignUpMode(!isSignUpMode)
+    setMessage('')
+    setUsername('')
+    setPassword('')
   }
 
   return (
@@ -62,17 +106,17 @@ function OrganizerLogin() {
               margin: '0 auto 16px auto',
               boxShadow: '0 4px 12px rgba(231, 111, 81, 0.1)'
             }}>
-              <Lock size={26} />
+              {isSignUpMode ? <UserPlus size={26} /> : <Lock size={26} />}
             </div>
             <h2 style={{ fontSize: '1.75rem', color: '#1a1a1a', fontWeight: '800', marginBottom: '6px' }}>
-              Organizer Portal
+              {isSignUpMode ? 'Organizer Sign Up' : 'Organizer Portal'}
             </h2>
             <p style={{ color: '#666', fontSize: '0.95rem' }}>
-              Sign in to manage events and check in attendees.
+              {isSignUpMode ? 'Create a new unique organizer account.' : 'Sign in to manage events and check in attendees.'}
             </p>
           </div>
 
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <User size={15} color="#e76f51" /> Username
@@ -81,7 +125,7 @@ function OrganizerLogin() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter organizer username"
+                placeholder="Enter unique username"
                 required
               />
             </div>
@@ -100,9 +144,22 @@ function OrganizerLogin() {
             </div>
 
             <button type="submit" className="primary-btn">
-              <LogIn size={18} /> Sign In
+              {isSignUpMode ? <UserPlus size={18} /> : <LogIn size={18} />} 
+              {isSignUpMode ? 'Create Account' : 'Sign In'}
             </button>
           </form>
+
+          {/* Toggle Link to switch between Sign In and New User Sign Up */}
+          <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.9rem', color: '#666' }}>
+            {isSignUpMode ? 'Already have an account? ' : 'New user? '}
+            <a 
+              href="#" 
+              onClick={toggleMode} 
+              style={{ color: '#e76f51', fontWeight: '600', textDecoration: 'none' }}
+            >
+              {isSignUpMode ? 'Sign In' : 'Create an account'}
+            </a>
+          </div>
 
           {message && (
             <div style={{ 

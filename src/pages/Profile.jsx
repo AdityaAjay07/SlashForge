@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
+import { User } from 'lucide-react'; // Make sure lucide-react is imported for the icon
 import './Profile.css';
 
 export default function Profile() {
@@ -9,17 +10,19 @@ export default function Profile() {
     name: '',
     email: '',
     phone: '',
-    avatar: '',
     clubs_joined: 0,
     events_registered: 0,
     events_attended: 0
   });
 
-  const currentUsername = sessionStorage.getItem('cet_student_username') || 'shreya_cs';
+  const currentUsername = sessionStorage.getItem('cet_student_username') || 'student';
+  const currentFullName = sessionStorage.getItem('cet_student_name') || 'Shreya Mohan';
+  const currentEmail = sessionStorage.getItem('cet_student_email') || 'shreya@cet.ac.in';
+  const currentPhone = sessionStorage.getItem('cet_student_phone') || '+91 9876543210';
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [currentUsername]);
 
   const fetchProfile = async () => {
     try {
@@ -33,13 +36,14 @@ export default function Profile() {
       if (data) {
         setProfile(data);
       } else {
-        // Fallback or create default mock entry if none exists yet
+        let allStudents = JSON.parse(localStorage.getItem('cet_all_students')) || [];
+        const found = allStudents.find(s => s.username === currentUsername);
+
         const defaultProfile = {
           username: currentUsername,
-          name: 'Shreya Mohan',
-          email: 'shreya@cet.ac.in',
-          phone: '+91 9876543210',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+          name: found ? found.fullName : currentFullName,
+          email: found ? found.email : currentEmail,
+          phone: found ? found.phone : currentPhone,
           clubs_joined: 2,
           events_registered: 3,
           events_attended: 1
@@ -58,13 +62,11 @@ export default function Profile() {
     try {
       const { error } = await supabase
         .from('student_profiles')
-        template: upsert
         .upsert({
           username: currentUsername,
           name: profile.name,
           email: profile.email,
           phone: profile.phone,
-          avatar: profile.avatar,
           clubs_joined: profile.clubs_joined,
           events_registered: profile.events_registered,
           events_attended: profile.events_attended
@@ -72,23 +74,40 @@ export default function Profile() {
 
       if (error) throw error;
       setIsEditing(false);
-      alert('Profile updated successfully in Supabase!');
+      alert('Profile updated successfully!');
     } catch (err) {
       alert('Error updating profile: ' + err.message);
     }
   };
 
   if (loading) {
-    return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading profile from Supabase...</div>;
+    return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading profile...</div>;
   }
 
   return (
     <div className="profile-container">
-      <div className="profile-header-card">
-        <img src={profile.avatar || 'https://via.placeholder.com/100'} alt="Avatar" className="profile-avatar" />
-        <div className="profile-info">
-          <h2>{profile.name}</h2>
-          <p>{profile.email} • {profile.phone || 'No phone added'}</p>
+      <div className="profile-header-card" style={{ display: 'flex', alignItems: 'center', gap: '24px', padding: '24px' }}>
+        
+        {/* Clean Vector Icon Placeholder matching the second image style */}
+        <div style={{
+          width: '75px',
+          height: '75px',
+          borderRadius: '50%',
+          backgroundColor: '#fff5f2',
+          border: '2px solid #fbdad2',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0
+        }}>
+          <User size={38} color="#e76f51" />
+        </div>
+
+        <div className="profile-info" style={{ flex: 1 }}>
+          <h2 style={{ margin: '0 0 4px 0', fontSize: '1.5rem', color: '#1a1a1a' }}>{profile.name}</h2>
+          <p style={{ margin: '0 0 16px 0', color: '#666', fontSize: '0.95rem' }}>
+            {profile.email} • {profile.phone}
+          </p>
           <button onClick={() => setIsEditing(!isEditing)} className="profile-edit-btn">
             {isEditing ? 'Cancel' : 'Edit Profile'}
           </button>
@@ -114,7 +133,7 @@ export default function Profile() {
       {/* Edit Form */}
       {isEditing && (
         <form onSubmit={handleSave} className="profile-edit-form">
-          <h3>Edit Student Profile (Supabase Sync)</h3>
+          <h3>Edit Student Profile</h3>
           <div className="form-group">
             <label>Name</label>
             <input type="text" value={profile.name} onChange={(e) => setProfile({...profile, name: e.target.value})} className="student-input" required />
@@ -124,14 +143,10 @@ export default function Profile() {
             <input type="email" value={profile.email} onChange={(e) => setProfile({...profile, email: e.target.value})} className="student-input" required />
           </div>
           <div className="form-group">
-            <label>Phone</label>
+            <label>Mobile Number</label>
             <input type="text" value={profile.phone} onChange={(e) => setProfile({...profile, phone: e.target.value})} className="student-input" required />
           </div>
-          <div className="form-group">
-            <label>Profile Picture URL</label>
-            <input type="url" value={profile.avatar} onChange={(e) => setProfile({...profile, avatar: e.target.value})} className="student-input" required />
-          </div>
-          <button type="submit" className="profile-save-btn">Save to Supabase</button>
+          <button type="submit" className="profile-save-btn">Save Changes</button>
         </form>
       )}
     </div>
