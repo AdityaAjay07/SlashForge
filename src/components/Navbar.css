@@ -2,17 +2,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 12px 20px;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 0 !important;
+  flex-wrap: nowrap !important;
+  gap: 10px;
+  /* overflow: hidden removed so dropdown isn't clipped! */
 }
 
 .nav-brand a {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: #1f2937;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .nav-links {
@@ -67,4 +77,122 @@
   cursor: pointer;
   position: relative;
   padding: 4px;
+}
+
+/* --- Mobile Controls & Dropdown Defaults (Hidden on Desktop) --- */
+.nav-mobile-controls,
+.mobile-menu-toggle,
+.mobile-dropdown-menu {
+  display: none;
+}
+
+/* --- Mobile Responsive Overhaul --- */
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 10px 16px;
+  }
+
+  /* Forcefully hide the old desktop row on mobile phones */
+  .nav-links {
+    display: none !important;
+  }
+
+  /* Show mobile controls wrapper (Bell + Hamburger toggle) */
+  .nav-mobile-controls {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .mobile-menu-toggle {
+    display: flex !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1f2937;
+    padding: 4px;
+  }
+
+  /* Slide-down dropdown menu container */
+  .mobile-dropdown-menu {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    padding: 16px 20px;
+    gap: 12px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e5e7eb;
+    z-index: 2000; /* Ensures it floats cleanly above hero items */
+    animation: slideDownMobile 0.2s ease-in-out;
+  }
+
+  .mobile-dropdown-menu a {
+    text-decoration: none;
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-dropdown-menu a:hover {
+    color: #e56b43;
+  }
+
+  .menu-divider {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 4px 0;
+  }
+
+  .menu-item-account {
+    color: #e56b43 !important;
+    font-weight: 600;
+  }
+
+  .mobile-logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #e56b43;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .mobile-login-cta {
+    background-color: #e56b43;
+    color: #fff !important;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+}
+
+@keyframes slideDownMobile {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -380,3 +380,221 @@ body.modal-open {
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* Responsive Grid for Categories / Cards */
+.categories-grid, .events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure modals don't overflow on small screens */
+@media (max-width: 640px) {
+  .modal-content {
+    width: 95% !important;
+    max-height: 88vh !important;
+    padding: 20px 16px !important;
+  }
+
+  .modal-header h3 {
+    font-size: 1.2rem;
+  }
+
+  /* Stack club item content on very small screens if necessary, or keep compact */
+  .modal-club-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .modal-club-item .join-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Global container safety for mobile viewports */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Reduce excessive padding on mobile containers */
+  .container, .main-wrapper {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* --- Mobile Responsive Overhaul --- */
+@media (max-width: 768px) {
+  /* Prevent horizontal page shaking */
+  body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Fix Header / Navbar layout for mobile */
+  header, .navbar, nav {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 10px 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .nav-links, .navbar-links {
+    display: flex !important;
+    gap: 8px !important;
+    font-size: 0.8rem !important;
+    align-items: center;
+  }
+
+  /* --- FIX FOR THE HERO SECTION --- */
+  /* Force the hero container to stack vertically instead of side-by-side */
+  .hero, .hero-section, .hero-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    text-align: left !important;
+    padding: 20px 18px !important;
+    gap: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Give text full width so words don't squish */
+  .hero-content, .hero-text, .hero-left {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Scale down the massive Hero Title gracefully so it flows in normal sentences */
+  h1, .hero-title {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+    margin-top: 5px !important;
+    margin-bottom: 12px !important;
+    word-break: normal !important;
+  }
+
+  .hero-section p, .hero-subtitle {
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Full-width call to action button */
+  .hero-section button, .cta-btn, .explore-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 12px 20px !important;
+    font-size: 1rem !important;
+  }
+
+  /* Center the illustration cleanly underneath the text */
+  .hero-image, .hero-illustration, .hero-right {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 10px !important;
+  }
+
+  .hero-image img, .hero-illustration img {
+    width: 85% !important;
+    max-height: 220px !important;
+    object-fit: contain;
+  }
+}
+
+/* Perfect Centering for Hero Illustration on Mobile */
+@media (max-width: 768px) {
+  .hero-image, .hero-illustration, .hero-right {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 15px auto 0 auto !important;
+    text-align: center !important;
+  }
+
+  .hero-image img, .hero-illustration img {
+    display: block !important;
+    margin: 0 auto !important;
+    width: 80% !important;
+    max-width: 280px !important;
+    height: auto !important;
+  }
+}
+
+/* --- Organizer Layout & General Styles --- */
+.organizer-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Hero Section Styles */
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 20px;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-image, 
+.hero-illustration {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-image img, 
+.hero-illustration img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Cards & Grid Layouts */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* --- Mobile Responsive Overrides --- */
+@media (max-width: 768px) {
+  .organizer-container {
+    padding: 12px;
+  }
+
+  .hero-section {
+    flex-direction: column;
+    padding: 20px 10px;
+    text-align: center;
+  }
+
+  /* Shifts the hero illustration slightly to the left only when viewed from mobile */
+  .hero-image img, 
+  .hero-illustration img {
+    transform: translateX(-25px) !important;
+  }
+}

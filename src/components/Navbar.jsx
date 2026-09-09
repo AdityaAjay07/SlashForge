@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -7,56 +8,123 @@ export default function Navbar() {
   const location = useLocation();
   const [isStudentLoggedIn, setIsStudentLoggedIn] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const studentAuth = sessionStorage.getItem('cet_student_auth');
     setIsStudentLoggedIn(studentAuth === 'true');
+
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [location]);
 
   const handleStudentLogout = () => {
     sessionStorage.removeItem('cet_student_auth');
     setIsStudentLoggedIn(false);
+    setIsMobileMenuOpen(false);
     navigate('/');
   };
 
+  const isMobile = windowWidth <= 768;
+
   return (
     <>
-      <nav>
-        <h2>ClubApp</h2>
-        <div>
-          <Link to={isStudentLoggedIn ? "/student-home" : "/"}>Home</Link>
-          <Link to="/events">Events</Link>
-          <Link to="/clubs">Clubs</Link>
+      <nav className="navbar">
+        <div className="nav-brand">
+          <Link to={isStudentLoggedIn ? "/student-home" : "/"}>ClubApp</Link>
+        </div>
 
-          {isStudentLoggedIn ? (
-            <>
-              <Link to="/profile" className="nav-account-link" style={{ color: '#e56b43', fontWeight: 'bold' }}>My Account</Link>
+        {/* Desktop Links Container */}
+        {!isMobile && (
+          <div className="nav-links">
+            <Link to={isStudentLoggedIn ? "/student-home" : "/"}>Home</Link>
+            <Link to="/events">Events</Link>
+            <Link to="/clubs">Clubs</Link>
+
+            {isStudentLoggedIn ? (
+              <>
+                <Link to="/profile" style={{ color: '#e56b43', fontWeight: 'bold' }}>My Account</Link>
+                <button 
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="notification-bell-btn"
+                  title="Notifications"
+                >
+                  🔔
+                </button>
+                <button onClick={handleStudentLogout} className="nav-logout-btn">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/organizer-login">Organizer</Link>
+                <Link to="/student-login" className="student-login-pill">
+                  Student Login
+                </Link>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Mobile Right Controls: Notification Bell + Hamburger Toggle */}
+        {isMobile && (
+          <div className="nav-mobile-controls" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {isStudentLoggedIn && (
               <button 
                 onClick={() => setShowNotifications(!showNotifications)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', marginLeft: '10px' }}
+                className="notification-bell-btn"
                 title="Notifications"
               >
                 🔔
               </button>
-              <button onClick={handleStudentLogout} style={{ marginLeft: '10px', padding: '4px 10px', background: '#e56b43', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/organizer-login">Organizer</Link>
-              <Link to="/student-login" style={{ marginLeft: '10px', padding: '6px 12px', background: '#e56b43', color: '#fff', borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold' }}>
-                Student Login
-              </Link>
-            </>
-          )}
-        </div>
+            )}
+            <button 
+              className="mobile-menu-toggle" 
+              onClick={() => setIsMobileMenuOpen(prev => !prev)}
+              aria-label="Toggle Menu"
+              style={{ display: 'flex', background: 'none', border: 'none', cursor: 'pointer', color: '#1f2937', padding: '4px' }}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        )}
+
+        {/* Mobile Dropdown Menu Drawer */}
+        {isMobile && isMobileMenuOpen && (
+          <div className="mobile-dropdown-menu">
+            <Link to={isStudentLoggedIn ? "/student-home" : "/"} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+            <Link to="/events" onClick={() => setIsMobileMenuOpen(false)}>Events</Link>
+            <Link to="/clubs" onClick={() => setIsMobileMenuOpen(false)}>Clubs</Link>
+            
+            <hr className="menu-divider" />
+
+            {isStudentLoggedIn ? (
+              <>
+                <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="menu-item-account">
+                  <User size={16} /> My Account
+                </Link>
+                <button onClick={handleStudentLogout} className="mobile-logout-btn">
+                  <LogOut size={16} /> Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/organizer-login" onClick={() => setIsMobileMenuOpen(false)}>Organizer Portal</Link>
+                <Link to="/student-login" onClick={() => setIsMobileMenuOpen(false)} className="mobile-login-cta">
+                  Student Login
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </nav>
 
       {/* Notification Slide-over Sidebar */}
       {showNotifications && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.4)', zIndex: 1000 }} onClick={() => setShowNotifications(false)}>
-          <div style={{ position: 'absolute', right: 0, top: 0, width: '350px', height: '100%', background: '#fff', padding: '20px', boxShadow: '-4px 0 15px rgba(0,0,0,0.1)', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.4)', zIndex: 1100 }} onClick={() => setShowNotifications(false)}>
+          <div style={{ position: 'absolute', right: 0, top: 0, width: '350px', maxWidth: '85vw', height: '100%', background: '#fff', padding: '20px', boxShadow: '-4px 0 15px rgba(0,0,0,0.1)', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
               <h3 style={{ margin: 0 }}>Notifications</h3>
               <button onClick={() => setShowNotifications(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>&times;</button>
